@@ -1,0 +1,12 @@
+# Générateur de Mots de Passe Sécurisés
+
+## Description
+
+Cette application Python permet de générer des mots de passe sécurisés selon des critères définis par l'utilisateur.
+
+## Utilisation
+
+1. Lancez le script principal :
+   ```bash
+   python password_generator.py
+   ```
