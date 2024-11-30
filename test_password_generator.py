@@ -1,5 +1,10 @@
 import pytest
-from password_generator import generate_password, show_passwords
+from password_generator import generate_password, show_passwords, passwords
+
+
+@pytest.fixture(autouse=True)
+def reset_passwords():
+    passwords.clear()  # Réinitialise la liste avant chaque test
 
 
 def test_generate_password_default():

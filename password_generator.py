@@ -5,22 +5,29 @@ import string
 passwords = []
 
 
-# Fonction pour générer un mot de passe
 def generate_password(length=12, use_special=True, use_numbers=True):
     if length < 6:
         raise ValueError(
             "La longueur du mot de passe doit être au moins de 6 caractères."
         )
 
-    # Caractères disponibles
-    chars = string.ascii_letters  # Lettres majuscules et minuscules
+    chars = string.ascii_letters
     if use_numbers:
         chars += string.digits
     if use_special:
         chars += string.punctuation
 
-    # Génération aléatoire
-    password = "".join(random.choice(chars) for _ in range(length))
+    # Assurez-vous d'inclure au moins un caractère de chaque type activé
+    password = []
+    if use_numbers:
+        password.append(random.choice(string.digits))
+    if use_special:
+        password.append(random.choice(string.punctuation))
+
+    # Remplir le reste du mot de passe
+    password += [random.choice(chars) for _ in range(length - len(password))]
+    random.shuffle(password)  # Mélanger les caractères pour éviter les patterns
+    password = "".join(password)
     passwords.append(password)
     return password
 
