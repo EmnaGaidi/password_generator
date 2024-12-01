@@ -11,22 +11,25 @@ def generate_password(length=12, use_special=True, use_numbers=True):
             "La longueur du mot de passe doit être au moins de 6 caractères."
         )
 
-    chars = string.ascii_letters
+    # Caractères disponibles
+    chars = string.ascii_lowercase  # Lettres minuscules uniquement par défaut
+    password = []
+
+    # Ajout d'un caractère obligatoire pour chaque catégorie activée
     if use_numbers:
         chars += string.digits
-    if use_special:
-        chars += string.punctuation
-
-    # Assurez-vous d'inclure au moins un caractère de chaque type activé
-    password = []
-    if use_numbers:
         password.append(random.choice(string.digits))
     if use_special:
+        chars += string.punctuation
         password.append(random.choice(string.punctuation))
+    # Ajout d'au moins une lettre majuscule
+    chars += string.ascii_uppercase
+    password.append(random.choice(string.ascii_uppercase))
 
-    # Remplir le reste du mot de passe
-    password += [random.choice(chars) for _ in range(length - len(password))]
-    random.shuffle(password)  # Mélanger les caractères pour éviter les patterns
+    # Compléter le mot de passe pour atteindre la longueur spécifiée
+    password += random.choices(chars, k=length - len(password))
+    random.shuffle(password)  # Mélanger pour éviter un ordre prévisible
+
     password = "".join(password)
     passwords.append(password)
     return password
