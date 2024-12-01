@@ -1,5 +1,5 @@
 # Utiliser une image vulnérable connue
-FROM debian:10
+FROM vulnerables/web-dvwa
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app

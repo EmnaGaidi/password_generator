@@ -51,3 +51,4 @@ jobs:
         with:
           image-ref: ${{ secrets.DOCKER_USERNAME }}/password-generator:latest
           severity: CRITICAL
+          ignore-unfixed: false
