@@ -1,6 +1,6 @@
-# Utiliser une image vulnérable connue
-FROM vulnerables/web-dvwa
+FROM python:3.9-slim
 
-# Commande par défaut
-CMD ["sh"]
-
+WORKDIR /app
+COPY . /app
+RUN pip install pytest
+CMD ["python", "password_generator.py"]
