@@ -18,13 +18,19 @@ def generate_password(length=12, use_special=True, use_numbers=True):
     # Ajout d'un caractère obligatoire pour chaque catégorie activée
     if use_numbers:
         chars += string.digits
-        password.append(secrets.choice(string.digits))
+        password.append(
+            secrets.choice(string.digits)
+        )  # Assurez-vous d'ajouter un chiffre
     if use_special:
         chars += string.punctuation
-        password.append(secrets.choice(string.punctuation))
+        password.append(
+            secrets.choice(string.punctuation)
+        )  # Assurez-vous d'ajouter un caractère spécial
     # Ajout d'au moins une lettre majuscule
     chars += string.ascii_uppercase
-    password.append(secrets.choice(string.ascii_uppercase))
+    password.append(
+        secrets.choice(string.ascii_uppercase)
+    )  # Assurez-vous d'ajouter une majuscule
 
     # Compléter le mot de passe pour atteindre la longueur spécifiée
     password += [secrets.choice(chars) for _ in range(length - len(password))]
