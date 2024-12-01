@@ -28,7 +28,9 @@ def generate_password(length=12, use_special=True, use_numbers=True):
 
     # Compléter le mot de passe pour atteindre la longueur spécifiée
     password += [secrets.choice(chars) for _ in range(length - len(password))]
-    secrets.SystemRandom().shuffle(password)  # Mélanger pour éviter un ordre prévisible
+
+    # Mélanger de manière sécurisée
+    password = [secrets.choice(chars) for _ in range(length)]
 
     password = "".join(password)
     passwords.append(password)
