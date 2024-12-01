@@ -1,4 +1,4 @@
-import random
+import secrets
 import string
 
 # Liste des mots de passe générés (stockage en mémoire)
@@ -18,17 +18,17 @@ def generate_password(length=12, use_special=True, use_numbers=True):
     # Ajout d'un caractère obligatoire pour chaque catégorie activée
     if use_numbers:
         chars += string.digits
-        password.append(random.choice(string.digits))
+        password.append(secrets.choice(string.digits))
     if use_special:
         chars += string.punctuation
-        password.append(random.choice(string.punctuation))
+        password.append(secrets.choice(string.punctuation))
     # Ajout d'au moins une lettre majuscule
     chars += string.ascii_uppercase
-    password.append(random.choice(string.ascii_uppercase))
+    password.append(secrets.choice(string.ascii_uppercase))
 
     # Compléter le mot de passe pour atteindre la longueur spécifiée
-    password += random.choices(chars, k=length - len(password))
-    random.shuffle(password)  # Mélanger pour éviter un ordre prévisible
+    password += [secrets.choice(chars) for _ in range(length - len(password))]
+    secrets.SystemRandom().shuffle(password)  # Mélanger pour éviter un ordre prévisible
 
     password = "".join(password)
     passwords.append(password)
