@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - test
-      - sonar_analysis
+      #- sonar_analysis
 
     steps:
       - name: Checkout code
