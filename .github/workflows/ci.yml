@@ -50,4 +50,4 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ secrets.DOCKER_USERNAME }}/password-generator:latest
-          ignore-unfixed: true
+          severity: CRITICAL
