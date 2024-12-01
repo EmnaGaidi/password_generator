@@ -36,7 +36,7 @@ def generate_password(length=12, use_special=True, use_numbers=True):
     password += [secrets.choice(chars) for _ in range(length - len(password))]
 
     # Mélanger de manière sécurisée
-    password = [secrets.choice(chars) for _ in range(length)]
+    secrets.SystemRandom().shuffle(password)
 
     password = "".join(password)
     passwords.append(password)
