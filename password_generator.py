@@ -50,28 +50,42 @@ def show_passwords():
 def check_password_strength(password):
     """Évaluer la force d'un mot de passe."""
     strength = 0
+
+    # Check length (8 or more)
     if len(password) >= 8:
         strength += 1
+
+    # Check for at least one uppercase letter
     if any(c.isupper() for c in password):
         strength += 1
+
+    # Check for at least one digit
     if any(c.isdigit() for c in password):
         strength += 1
+
+    # Check for at least one special character
     if any(c in string.punctuation for c in password):
         strength += 1
 
+    # If the password has at least length 8 and no other strength factors, classify as "Moyenne"
     if strength == 1:
-        return "Faible"
-    elif strength == 2:
+        return "Moyenne"
+
+    # Adjust strength based on the criteria
+    if strength == 2:
         return "Moyenne"
     elif strength == 3:
         return "Forte"
     elif strength == 4:
         return "Très Forte"
+
     return "Faible"  # Default case
 
 
 def save_passwords_to_file(filename="passwords.txt"):
     """Sauvegarder les mots de passe dans un fichier."""
+    if not passwords:
+        return "Aucun mot de passe à sauvegarder."  # Check for empty list
     with open(filename, "w") as f:
         for i, pw in enumerate(passwords):
             f.write(f"{i + 1}. {pw}\n")

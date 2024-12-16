@@ -12,7 +12,7 @@ import string
 
 @pytest.fixture(autouse=True)
 def reset_passwords():
-    passwords.clear()  # Réinitialise la liste avant chaque test
+    passwords.clear()
 
 
 def test_generate_password_default():
@@ -20,15 +20,18 @@ def test_generate_password_default():
     assert len(password) == 12
     assert any(c.isupper() for c in password)
     assert any(c.isdigit() for c in password)
+    assert any(c in string.punctuation for c in password)
 
 
 def test_generate_password_no_special():
     password = generate_password(use_special=False)
+    assert len(password) == 12
     assert all(c not in string.punctuation for c in password)
 
 
 def test_generate_password_no_numbers():
     password = generate_password(use_numbers=False)
+    assert len(password) == 12
     assert all(c not in string.digits for c in password)
 
 
@@ -43,14 +46,11 @@ def test_generate_password_with_large_length():
 
 
 def test_check_password_strength():
-    assert check_password_strength("abc") == "Faible"  # Only length < 8
-    assert check_password_strength("abcd1234") == "Moyenne"  # Length >= 8, has digits
-    assert (
-        check_password_strength("Abcd1234") == "Forte"
-    )  # Length >= 8, has uppercase and digits
-    assert (
-        check_password_strength("Abcd1234!") == "Très Forte"
-    )  # Length >= 8, has uppercase, digits, and special char
+    assert check_password_strength("") == "Faible"
+    assert check_password_strength("12345678") == "Moyenne"
+    assert check_password_strength("abcdefgh") == "Moyenne"  # Fixed logic
+    assert check_password_strength("Abcd1234") == "Forte"
+    assert check_password_strength("Abcd1234!") == "Très Forte"
 
 
 def test_show_passwords_empty():
@@ -60,6 +60,8 @@ def test_show_passwords_empty():
 def test_show_passwords_non_empty():
     generate_password()
     assert "1." in show_passwords()
+    generate_password()
+    assert "2." in show_passwords()
 
 
 def test_save_passwords_to_file(tmp_path):
@@ -71,6 +73,15 @@ def test_save_passwords_to_file(tmp_path):
     with open(file) as f:
         lines = f.readlines()
         assert len(lines) == 2
+        assert lines[0].strip() == "1. pass1"
+        assert lines[1].strip() == "2. pass2"
+
+
+def test_save_passwords_to_file_empty(tmp_path):
+    file = tmp_path / "passwords_empty.txt"
+    message = save_passwords_to_file(file)
+    assert "Aucun mot de passe à sauvegarder." in message  # Fixed behavior
+    assert not file.exists()
 
 
 def test_retrieve_password():
@@ -79,3 +90,5 @@ def test_retrieve_password():
     assert retrieve_password(2) == "pass2"
     with pytest.raises(IndexError):
         retrieve_password(3)
+    with pytest.raises(IndexError):
+        retrieve_password(0)
