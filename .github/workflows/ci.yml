@@ -49,10 +49,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           args: >
-            -Dsonar.projectKey=EmnaGaidi_password_generator
-            -Dsonar.organization=emnagaidi
-            -Dsonar.coverage.exclusions=test_*.py
-            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dproject.settings=sonar-project.properties
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
