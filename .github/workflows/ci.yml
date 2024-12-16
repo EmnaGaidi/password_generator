@@ -42,7 +42,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           args: >
-            -Dsonar.projectKey=password_generator
+            -Dsonar.projectKey=EmnaGaidi_password_generator
             -Dsonar.organization=emnagaidi
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
