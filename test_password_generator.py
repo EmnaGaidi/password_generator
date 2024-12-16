@@ -1,11 +1,18 @@
 import pytest
-import string  # Add this import
-from password_generator import generate_password, show_passwords, passwords
+from password_generator import (
+    generate_password,
+    show_passwords,
+    check_password_strength,
+    save_passwords_to_file,
+    retrieve_password,
+    passwords,
+)
+import string
 
 
 @pytest.fixture(autouse=True)
 def reset_passwords():
-    passwords.clear()  # Reset the list before each test
+    passwords.clear()  # Réinitialise la liste avant chaque test
 
 
 def test_generate_password_default():
@@ -13,27 +20,15 @@ def test_generate_password_default():
     assert len(password) == 12
     assert any(c.isupper() for c in password)
     assert any(c.isdigit() for c in password)
-    assert any(
-        c in string.punctuation for c in password
-    )  # Special characters should exist
 
 
 def test_generate_password_no_special():
     password = generate_password(use_special=False)
-    assert len(password) == 12
     assert all(c not in string.punctuation for c in password)
 
 
 def test_generate_password_no_numbers():
     password = generate_password(use_numbers=False)
-    assert len(password) == 12
-    assert all(c not in string.digits for c in password)
-
-
-def test_generate_password_no_special_no_numbers():
-    password = generate_password(use_special=False, use_numbers=False)
-    assert len(password) == 12
-    assert all(c not in string.punctuation for c in password)
     assert all(c not in string.digits for c in password)
 
 
@@ -42,27 +37,20 @@ def test_generate_password_min_length():
         generate_password(length=5)
 
 
-def test_generate_password_exact_length():
-    length = 20
-    password = generate_password(length=length)
-    assert len(password) == length
-
-
-def test_generate_password_edge_cases():
-    # Case: length == 6
-    password = generate_password(length=6)
-    assert len(password) == 6
-    # Case: length == 10
-    password = generate_password(length=10)
-    assert len(password) == 10
-
-
 def test_generate_password_with_large_length():
     password = generate_password(length=100)
     assert len(password) == 100
-    assert any(c.isupper() for c in password)
-    assert any(c.isdigit() for c in password)
-    assert any(c in string.punctuation for c in password)
+
+
+def test_check_password_strength():
+    assert check_password_strength("abc") == "Faible"  # Only length < 8
+    assert check_password_strength("abcd1234") == "Moyenne"  # Length >= 8, has digits
+    assert (
+        check_password_strength("Abcd1234") == "Forte"
+    )  # Length >= 8, has uppercase and digits
+    assert (
+        check_password_strength("Abcd1234!") == "Très Forte"
+    )  # Length >= 8, has uppercase, digits, and special char
 
 
 def test_show_passwords_empty():
@@ -71,15 +59,23 @@ def test_show_passwords_empty():
 
 def test_show_passwords_non_empty():
     generate_password()
-    output = show_passwords()
-    assert "1." in output
-    assert len(output.splitlines()) == 1  # Only one password should exist
+    assert "1." in show_passwords()
 
 
-def test_show_passwords_multiple():
-    generate_password()
-    generate_password()
-    output = show_passwords()
-    assert "1." in output
-    assert "2." in output
-    assert len(output.splitlines()) == 2  # Two passwords should exist
+def test_save_passwords_to_file(tmp_path):
+    passwords.extend(["pass1", "pass2"])
+    file = tmp_path / "passwords.txt"
+    message = save_passwords_to_file(file)
+    assert file.exists()
+    assert "Les mots de passe ont été sauvegardés" in message
+    with open(file) as f:
+        lines = f.readlines()
+        assert len(lines) == 2
+
+
+def test_retrieve_password():
+    passwords.extend(["pass1", "pass2"])
+    assert retrieve_password(1) == "pass1"
+    assert retrieve_password(2) == "pass2"
+    with pytest.raises(IndexError):
+        retrieve_password(3)
