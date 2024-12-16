@@ -38,11 +38,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Java (required for SonarQube scanner)
-        uses: actions/setup-java@v3
-        with:
-          java-version: "11"
-
       - name: SonarQube Analysis
         run: |
           sonar-scanner \
