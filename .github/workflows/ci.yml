@@ -38,10 +38,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarQube Analysis
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=password_generator \
+            -Dsonar.organization=emnagaidi \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
   build_and_push:
     runs-on: ubuntu-latest
