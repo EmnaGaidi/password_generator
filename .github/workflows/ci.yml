@@ -30,7 +30,7 @@ jobs:
       - name: Run tests
         run: |
           pytest test_password_generator.py
-          pytest --cov=app --cov-report=xml
+          pytest --cov=password_generator --cov-report=xml
 
   sonar_analysis:
     runs-on: ubuntu-latest
