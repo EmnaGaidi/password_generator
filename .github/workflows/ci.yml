@@ -51,6 +51,8 @@ jobs:
           args: >
             -Dsonar.projectKey=EmnaGaidi_password_generator
             -Dsonar.organization=emnagaidi
+            -Dsonar.coverage.exclusions=test_*.py
+            -Dsonar.python.coverage.reportPaths=coverage.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
